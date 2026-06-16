@@ -6,10 +6,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Configuramos la IA directamente
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
-// Usamos el nombre básico que suele estar disponible en todas las cuentas
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+// Ajuste clave: añadimos 'models/' para que la API localice el recurso
+const model = genAI.getGenerativeModel({ model: "models/gemini-1.5-flash" });
 
 let chatHistory = [];
 
