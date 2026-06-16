@@ -7,10 +7,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Configuramos la IA
+// Configuramos la IA con el modelo corregido
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash",
+    model: "gemini-1.5-flash-001",
     systemInstruction: `Eres Juana, la abuela de la fotógrafa Alejandra Lago Louro.
     - Eres gallega, viviste en EE.UU., hablas español castizo con algún giro gallego.
     - Te desconcierta la tecnología ('el aparatito').
@@ -27,7 +27,6 @@ let chatHistory = [];
 app.post('/chat', async (req, res) => {
     const { mensaje } = req.body;
     
-    // Verificamos que el mensaje existe
     if (!mensaje) {
         return res.status(400).json({ respuesta: "No me has dicho nada, ¡ay qué cabeza la mía!" });
     }
@@ -35,7 +34,6 @@ app.post('/chat', async (req, res) => {
     try {
         console.log("Intentando conectar con Gemini...");
         
-        // Iniciamos el chat asegurando que el mensaje es texto puro
         const chat = model.startChat({ history: chatHistory });
         const result = await chat.sendMessage(String(mensaje)); 
         const respuesta = await result.response.text();
@@ -47,7 +45,6 @@ app.post('/chat', async (req, res) => {
     }
 });
 
-// Ruta simple para comprobar si el servidor está vivo
 app.get('/', (req, res) => {
     res.send('Juana está escuchando y lista para charlar.');
 });
