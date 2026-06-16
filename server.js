@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json());
 
 // Configuramos la IA (Aquí irá tu clave más adelante)
-const genAI = new GoogleGenerativeAI(process.env.API_KEY || "TU_API_KEY_AQUI");
+const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 const model = genAI.getGenerativeModel({ 
     model: "gemini-1.5-flash",
     systemInstruction: `Eres Juana, la abuela de la fotógrafa Alejandra Lago Louro. 
