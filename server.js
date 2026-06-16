@@ -7,7 +7,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Configuramos la IA
+// Configuramos la IA con el modelo estable
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 const model = genAI.getGenerativeModel({
     model: "gemini-1.5-flash",
@@ -32,12 +32,16 @@ app.post('/chat', async (req, res) => {
         const result = await chat.sendMessage(mensaje);
         const respuesta = result.response.text();
         
-        // Guardamos en memoria si quieres que recuerde la charla
         res.json({ respuesta });
     } catch (error) {
         console.error("ERROR DETECTADO:", error);
         res.status(500).json({ respuesta: "Ay, hijo/a, el aparatito no me deja contestar ahora... " + error.message });
     }
+});
+
+// Ruta simple para comprobar si el servidor está vivo
+app.get('/', (req, res) => {
+    res.send('Juana está escuchando y lista para charlar.');
 });
 
 app.listen(3000, () => console.log('Juana está escuchando en el puerto 3000'));
