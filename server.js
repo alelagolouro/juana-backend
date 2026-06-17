@@ -47,5 +47,5 @@ app.post('/chat', async (req, res) => {
 // Ajuste crucial para que Render pueda asignar su propio puerto dinámico
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Servidor funcionando en el puerto ${PORT}`);
+    console.log("Servidor funcionando en el puerto " + PORT);
 });
