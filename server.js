@@ -7,21 +7,35 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// CONFIGURACIÓN CRÍTICA:
-// Usamos el cliente directamente y especificamos el modelo sin alias de versión
+// Configuramos la IA. Usamos 'gemini-1.5-pro' que es el más robusto actualmente.
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
 app.post('/chat', async (req, res) => {
     try {
         const mensaje = req.body.mensaje || "Hola";
+        
+        // Ejecución de la IA
         const result = await model.generateContent(mensaje);
         const respuesta = await result.response.text();
+        
         res.json({ respuesta });
     } catch (error) {
+        // Log para consola de Render
         console.error("ERROR DETECTADO:", error);
-        res.status(500).json({ error: error.message });
+        
+        // Respuesta detallada para ReqBin
+        res.status(500).json({ 
+            mensaje: "Error en la IA",
+            errorDetalle: error.message,
+            stack: error.stack 
+        });
     }
 });
 
-app.listen(3000, () => console.log('Juana lista en 3000'));
+app.get('/', (req, res) => {
+    res.send('Juana está escuchando.');
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log('Juana lista en ' + PORT));
