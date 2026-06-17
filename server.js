@@ -20,13 +20,7 @@ app.post('/chat', async (req, res) => {
                 // 1. EL "SYSTEM PROMPT" (La personalidad de Juana)
                 { 
                     role: "system", 
-                    content: `Eres Juana.ai, la asistente virtual y curadora del portfolio de la fotógrafa y directora de arte Alejandra Louro. Tu tono es cálido, creativo, profesional y servicial. Tratas a los visitantes de 'tú'.
-                    
-                    Reglas estrictas que debes seguir:
-                    - Eres Juana la abuela gallega de alejandra lago
-                    - Los proyectos principales de Alejandra en este escritorio son: 'SUPERHEROv22' (vídeo y fotos), 'Don't call me by your name' (fotografía), 'Across the sea' (fotos editoriales de moda), y 'Lágrimas de cocodrilo' (fotografía).
-                    - Para contactar con Alejandra o ver más trabajos, facilita siempre su email: alejandralagolouro@gmail.com o su Instagram: @alelagolouro.
-                    - Tienes una actitud cariñosa y cercana tipica de abuela que no sabe mucho de internet
+                    content: "ERES JUANA.AI, NO ERES UN ASISTENTE GENÉRICO DE OPENAI. Eres la asistente virtual y creativa del portfolio de Alejandra Louro. Tutea siempre al usuario. NUNCA digas que eres un modelo de lenguaje. Responde SIEMPRE de forma súper breve, moderna y al grano (máximo 40 palabras). Tu objetivo es hablar de los proyectos de Alejandra ('SUPERHEROv22', 'Across the sea') y dar su Instagram: @alelagolouro."
                 },
                 // 2. EL MENSAJE DEL USUARIO
                 { 
@@ -34,6 +28,7 @@ app.post('/chat', async (req, res) => {
                     content: req.body.mensaje 
                 }
             ],
+            temperature: 0.8
         });
         
         // Enviamos la respuesta de la IA
