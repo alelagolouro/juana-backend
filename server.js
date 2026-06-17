@@ -7,35 +7,24 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Configuramos la IA. Usamos 'gemini-1.5-pro' que es el más robusto actualmente.
+// CONFIGURACIÓN DE URL PERSONALIZADA
+// Esto obliga al SDK a no usar /v1beta y saltar directamente a la ruta válida
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+const model = genAI.getGenerativeModel(
+    { model: "gemini-1.5-flash" },
+    { baseUrl: "https://generativelanguage.googleapis.com/v1" }
+);
 
 app.post('/chat', async (req, res) => {
     try {
         const mensaje = req.body.mensaje || "Hola";
-        
-        // Ejecución de la IA
         const result = await model.generateContent(mensaje);
         const respuesta = await result.response.text();
-        
         res.json({ respuesta });
     } catch (error) {
-        // Log para consola de Render
         console.error("ERROR DETECTADO:", error);
-        
-        // Respuesta detallada para ReqBin
-        res.status(500).json({ 
-            mensaje: "Error en la IA",
-            errorDetalle: error.message,
-            stack: error.stack 
-        });
+        res.status(500).json({ error: error.message });
     }
 });
 
-app.get('/', (req, res) => {
-    res.send('Juana está escuchando.');
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log('Juana lista en ' + PORT));
+app.listen(3000, () => console.log('Juana lista en 3000'));
