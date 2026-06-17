@@ -7,19 +7,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// CONFIGURACIÓN DE URL PERSONALIZADA
-// Esto obliga al SDK a no usar /v1beta y saltar directamente a la ruta válida
+// INICIALIZACIÓN MÍNIMA
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
-const model = genAI.getGenerativeModel(
-    { model: "gemini-1.5-flash" },
-    { baseUrl: "https://generativelanguage.googleapis.com/v1" }
-);
+// Si esto sigue fallando, prueba cambiando el string por "gemini-1.5-flash" a secas
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 app.post('/chat', async (req, res) => {
     try {
-        const mensaje = req.body.mensaje || "Hola";
-        const result = await model.generateContent(mensaje);
-        const respuesta = await result.response.text();
+        const result = await model.generateContent(req.body.mensaje);
+        const respuesta = result.response.text();
         res.json({ respuesta });
     } catch (error) {
         console.error("ERROR DETECTADO:", error);
@@ -27,4 +23,4 @@ app.post('/chat', async (req, res) => {
     }
 });
 
-app.listen(3000, () => console.log('Juana lista en 3000'));
+app.listen(3000);
