@@ -8,9 +8,9 @@ app.use(express.json());
 
 app.post('/chat', async (req, res) => {
     try {
-        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${process.env.API_KEY}`;
+        // Usamos gemini-1.0-pro que es el más estable en la API v1
+        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.0-pro:generateContent?key=${process.env.API_KEY}`;
         
-        // CORRECCIÓN: La estructura correcta para Gemini API
         const bodyData = {
             contents: [{
                 parts: [{ text: req.body.mensaje }]
@@ -27,7 +27,7 @@ app.post('/chat', async (req, res) => {
         
         if (!response.ok) throw new Error(JSON.stringify(data));
 
-        // Accedemos correctamente a la respuesta
+        // Accedemos a la respuesta del modelo 1.0-pro
         const respuesta = data.candidates[0].content.parts[0].text;
         res.json({ respuesta });
         
@@ -37,4 +37,4 @@ app.post('/chat', async (req, res) => {
     }
 });
 
-app.listen(3000);
+app.listen(3000, () => console.log('Juana lista en puerto 3000'));
