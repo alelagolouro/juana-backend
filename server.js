@@ -7,24 +7,21 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Configuramos la IA sin prefijos de versión para evitar el error 404/500
+// CONFIGURACIÓN CRÍTICA:
+// Usamos el cliente directamente y especificamos el modelo sin alias de versión
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 app.post('/chat', async (req, res) => {
     try {
-        const result = await model.generateContent(req.body.mensaje);
-        const respuesta = result.response.text();
+        const mensaje = req.body.mensaje || "Hola";
+        const result = await model.generateContent(mensaje);
+        const respuesta = await result.response.text();
         res.json({ respuesta });
     } catch (error) {
-        // Esto nos mostrará el error real en los logs
         console.error("ERROR DETECTADO:", error);
         res.status(500).json({ error: error.message });
     }
 });
 
-app.get('/', (req, res) => {
-    res.send('Juana está escuchando.');
-});
-
-app.listen(3000);
+app.listen(3000, () => console.log('Juana lista en 3000'));
